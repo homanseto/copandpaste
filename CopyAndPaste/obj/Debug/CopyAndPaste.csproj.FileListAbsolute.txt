@@ -1,0 +1,11 @@
+D:\Project\C#\CopyAndPaste\CopyAndPaste\bin\Debug\CopyAndPaste.exe.config
+D:\Project\C#\CopyAndPaste\CopyAndPaste\bin\Debug\CopyAndPaste.exe
+D:\Project\C#\CopyAndPaste\CopyAndPaste\bin\Debug\CopyAndPaste.pdb
+D:\Project\C#\CopyAndPaste\CopyAndPaste\obj\Debug\CopyAndPaste.csproj.AssemblyReference.cache
+D:\Project\C#\CopyAndPaste\CopyAndPaste\obj\Debug\CopyAndPaste.csproj.SuggestedBindingRedirects.cache
+D:\Project\C#\CopyAndPaste\CopyAndPaste\obj\Debug\CopyAndPaste.Form1.resources
+D:\Project\C#\CopyAndPaste\CopyAndPaste\obj\Debug\CopyAndPaste.Properties.Resources.resources
+D:\Project\C#\CopyAndPaste\CopyAndPaste\obj\Debug\CopyAndPaste.csproj.GenerateResource.cache
+D:\Project\C#\CopyAndPaste\CopyAndPaste\obj\Debug\CopyAndPaste.csproj.CoreCompileInputs.cache
+D:\Project\C#\CopyAndPaste\CopyAndPaste\obj\Debug\CopyAndPaste.exe
+D:\Project\C#\CopyAndPaste\CopyAndPaste\obj\Debug\CopyAndPaste.pdb
