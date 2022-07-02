@@ -28,13 +28,13 @@ namespace CopyAndPaste
         private Button targetButton;
         private Label targetPath;
         private TreeView selectView;
-        private ProgressBar progressBar1;
         private ToolStripMenuItem folderMenuItem;
         private TextBox selectBox;
         private TextBox targetBox;
-        private FolderBrowserDialog folderBrowserDialog3;
-        private FolderBrowserDialog folderBrowserDialog4;
         private ToolTip toolTip2;
+        private Label processinglabel;
+        private ProgressBar progressBar1;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }
 
