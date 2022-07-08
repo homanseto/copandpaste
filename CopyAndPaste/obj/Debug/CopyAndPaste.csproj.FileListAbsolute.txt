@@ -30,3 +30,17 @@ C:\Users\user\Desktop\Seto\coding\C#\copandpaste\CopyAndPaste\bin\Debug\Microsof
 C:\Users\user\Desktop\Seto\coding\C#\copandpaste\CopyAndPaste\bin\Debug\Microsoft.WindowsAPICodePack.ShellExtensions.pdb
 C:\Users\user\Desktop\Seto\coding\C#\copandpaste\CopyAndPaste\bin\Debug\Microsoft.WindowsAPICodePack.ShellExtensions.xml
 C:\Users\user\Desktop\Seto\coding\C#\copandpaste\CopyAndPaste\obj\Debug\CopyAndPaste.csproj.CopyComplete
+D:\Project\C#\CopyAndPaste\CopyAndPaste\bin\Debug\Microsoft.WindowsAPICodePack.dll
+D:\Project\C#\CopyAndPaste\CopyAndPaste\bin\Debug\Microsoft.WindowsAPICodePack.Shell.dll
+D:\Project\C#\CopyAndPaste\CopyAndPaste\bin\Debug\Microsoft.WindowsAPICodePack.ShellExtensions.dll
+D:\Project\C#\CopyAndPaste\CopyAndPaste\bin\Debug\Microsoft.WindowsAPICodePack.pdb
+D:\Project\C#\CopyAndPaste\CopyAndPaste\bin\Debug\Microsoft.WindowsAPICodePack.xml
+D:\Project\C#\CopyAndPaste\CopyAndPaste\bin\Debug\Microsoft.WindowsAPICodePack.Shell.pdb
+D:\Project\C#\CopyAndPaste\CopyAndPaste\bin\Debug\Microsoft.WindowsAPICodePack.Shell.xml
+D:\Project\C#\CopyAndPaste\CopyAndPaste\bin\Debug\Microsoft.WindowsAPICodePack.ShellExtensions.pdb
+D:\Project\C#\CopyAndPaste\CopyAndPaste\bin\Debug\Microsoft.WindowsAPICodePack.ShellExtensions.xml
+D:\Project\C#\CopyAndPaste\CopyAndPaste\obj\Debug\CopyAndPaste.csproj.CopyComplete
+D:\Project\C#\CopyAndPaste\CopyAndPaste\bin\Debug\CopyAndPaste.exe.manifest
+D:\Project\C#\CopyAndPaste\CopyAndPaste\bin\Debug\CopyAndPaste.application
+D:\Project\C#\CopyAndPaste\CopyAndPaste\obj\Debug\CopyAndPaste.exe.manifest
+D:\Project\C#\CopyAndPaste\CopyAndPaste\obj\Debug\CopyAndPaste.application

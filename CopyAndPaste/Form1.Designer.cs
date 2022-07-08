@@ -34,7 +34,10 @@ namespace CopyAndPaste
         private ToolTip toolTip2;
         private Label processinglabel;
         private ProgressBar progressBar1;
-        private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.ComponentModel.BackgroundWorker copybackgroundworker;
+        private System.ComponentModel.BackgroundWorker loadingpercentage;
+        private Button fileNumberButton;
+        private TextBox fileNumberText;
     }
 }
 
