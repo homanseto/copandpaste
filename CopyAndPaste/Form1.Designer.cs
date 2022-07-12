@@ -27,7 +27,7 @@ namespace CopyAndPaste
         private Label selectPath;
         private Button targetButton;
         private Label targetPath;
-        private TreeView selectView;
+        //private TreeView selectView;
         private ToolStripMenuItem folderMenuItem;
         private TextBox selectBox;
         private TextBox targetBox;
@@ -38,6 +38,7 @@ namespace CopyAndPaste
         private System.ComponentModel.BackgroundWorker loadingpercentage;
         private Button fileNumberButton;
         private TextBox fileNumberText;
+        private TriStateTreeView triStateTreeView;
     }
 }
 

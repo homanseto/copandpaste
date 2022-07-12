@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="CopyAndPaste.exe" size="16824">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="CopyAndPaste.exe" size="19896">
       <assemblyIdentity name="CopyAndPaste" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>/s8r2S16u0derYVt1Noh7jabu5bBp7hUS4OGxZjJi5c=</dsig:DigestValue>
+        <dsig:DigestValue>xc4K35lvjyhmALzYIgr6AnX0lkfwUOMr4FyFf45b14k=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
