@@ -21,7 +21,7 @@ namespace CopyAndPaste
         {
             //UseWaitCursor = true;
             InitializeComponent();
-        //    UseWaitCursor = false;
+            //    UseWaitCursor = false;
         }
 
         private void InitializeComponent()
@@ -30,7 +30,6 @@ namespace CopyAndPaste
             this.selectBox = new System.Windows.Forms.TextBox();
             this.selectButton = new System.Windows.Forms.Button();
             this.selectPath = new System.Windows.Forms.Label();
-            //this.selectView = new System.Windows.Forms.TreeView();
             this.targetButton = new System.Windows.Forms.Button();
             this.targetBox = new System.Windows.Forms.TextBox();
             this.targetPath = new System.Windows.Forms.Label();
@@ -40,9 +39,9 @@ namespace CopyAndPaste
             this.processinglabel = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.copybackgroundworker = new System.ComponentModel.BackgroundWorker();
-            this.loadingpercentage = new System.ComponentModel.BackgroundWorker();
             this.fileNumberButton = new System.Windows.Forms.Button();
             this.fileNumberText = new System.Windows.Forms.TextBox();
+            this.progressbackgorundworker = new System.ComponentModel.BackgroundWorker();
             this.triStateTreeView = new CopyAndPaste.TriStateTreeView();
             this.SuspendLayout();
             // 
@@ -71,22 +70,6 @@ namespace CopyAndPaste
             this.selectPath.Size = new System.Drawing.Size(82, 13);
             this.selectPath.TabIndex = 2;
             this.selectPath.Text = "Select Directory";
-            // 
-            // selectView
-            // 
-            //this.selectView.Location = new System.Drawing.Point(15, 57);
-            //this.selectView.Name = "selectView";
-            //this.selectView.Size = new System.Drawing.Size(709, 265);
-            //this.selectView.TabIndex = 13;
-            // 
-            // triStateTreeView
-            // 
-            this.triStateTreeView.Location = new System.Drawing.Point(12, 74);
-            this.triStateTreeView.Name = "triStateTreeView";
-            this.triStateTreeView.Size = new System.Drawing.Size(709, 260);
-            this.triStateTreeView.TabIndex = 3;
-            this.triStateTreeView.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.triStateTreeView1_BeforeExpand);
-            //this.triStateTreeView.AfterExpand += new System.Windows.Forms.TreeView
             // 
             // targetButton
             // 
@@ -160,6 +143,7 @@ namespace CopyAndPaste
             this.fileNumberButton.TabIndex = 11;
             this.fileNumberButton.Text = "file number";
             this.fileNumberButton.UseVisualStyleBackColor = true;
+            this.fileNumberButton.Click += new System.EventHandler(this.file_Click);
             // 
             // fileNumberText
             // 
@@ -167,6 +151,20 @@ namespace CopyAndPaste
             this.fileNumberText.Name = "fileNumberText";
             this.fileNumberText.Size = new System.Drawing.Size(181, 20);
             this.fileNumberText.TabIndex = 12;
+            // 
+            // progressbackgorundworker
+            // 
+            this.progressbackgorundworker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.pogressbackgroundworker_DoWork);
+            this.progressbackgorundworker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.pogressbackgroundworker_RunWorkerCompleted);
+            // 
+            // triStateTreeView
+            // 
+            this.triStateTreeView.Location = new System.Drawing.Point(12, 74);
+            this.triStateTreeView.Name = "triStateTreeView";
+            this.triStateTreeView.Size = new System.Drawing.Size(709, 260);
+            this.triStateTreeView.TabIndex = 3;
+            this.triStateTreeView.TriStateStyleProperty = CopyAndPaste.TriStateTreeView.TriStateStyles.Standard;
+            this.triStateTreeView.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.triStateTreeView1_BeforeExpand);
             // 
             // Form1
             // 
@@ -187,6 +185,15 @@ namespace CopyAndPaste
             this.ResumeLayout(false);
             this.PerformLayout();
 
+        }
+        List<TreeNode> checkedList = new List<TreeNode>();
+        private int downloadedNum
+        {
+            get { return this.downloadedNum; }
+            set
+            {
+                this.downloadedNum = value;
+            }
         }
 
         private void select_Click(object sender, EventArgs e)
@@ -258,116 +265,137 @@ namespace CopyAndPaste
                 tds.Tag = fi.FullName;
             };
         }
+        private void triStateTreeView1_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+        {
+            // A node in the tree has been selected
+            TreeView tv = sender as TreeView;
+            tv.UseWaitCursor = true;
 
+            //if ((e.Node.Nodes.Count == 1) && (e.Node.Nodes[0].Text == ""))
+            //{
+            string path = e.Node.Tag as string;
+            e.Node.Nodes.Clear();
+            LoadSubDirectories(path, e.Node);
+            LoadFiles(path, e.Node);
+            //}
+
+            tv.UseWaitCursor = false;
+        }
 
         private void submit_Click(object sender, EventArgs e)
         {
-            progressBar1.Visible = true;
-            progressBar1.Enabled = true;
-            copybackgroundworker.RunWorkerAsync();
-        }
-
-
-        private void copybackgroundworker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            List<TreeNode> clickedList = new List<TreeNode>();
             if (!String.IsNullOrEmpty(this.selectBox.Text) && !String.IsNullOrEmpty(this.targetBox.Text))
             {
-                var testResult = descendants(this.triStateTreeView.Nodes[0]).Where(x => x.Checked == true).ToList();
-                foreach (TreeNode node in testResult)
-                {
-                    if (!String.IsNullOrEmpty(node.Text))
-                    {
-                        Console.WriteLine(node.FullPath);
-                        clickedList.Add(node);
-                    }
-                }
-                this.CopyDirectory(this.selectBox.Text, clickedList, this.targetBox.Text);
+                this.submitButton.Enabled = false;
+                this.submitButton.ForeColor = Color.Gray;
+                this.selectButton.Enabled = false;
+                this.targetButton.Enabled = false;
+                this.progressBar1.Visible = true;
+                this.progressBar1.Enabled = true;
+                copybackgroundworker.RunWorkerAsync();
+                progressbackgorundworker.RunWorkerAsync();
+            }
+            else
+            {
+                MessageBox.Show("Select both directories");
             }
         }
 
-        private List<TreeNode> descendants(TreeNode node)
+        private void UpdataPeogress()
         {
-            var nodes = node.Nodes.Cast<TreeNode>().ToList();
-            return nodes.SelectMany(x => descendants(x)).Concat(nodes).ToList();
+            this.progressBar1.Value = downloadedNum;
+            if (this.progressBar1.Value < this.progressBar1.Maximum)
+            {
+                int percent = (int)(((double)progressBar1.Value / (double)progressBar1.Maximum) * 100);
+                progressBar1.CreateGraphics().DrawString(percent.ToString() + "%", new Font("Arial", (float)8.25, FontStyle.Regular), Brushes.Black, new PointF(progressBar1.Width / 2 - 10, progressBar1.Height / 2 - 7));
+                Application.DoEvents();
+            }
+
+        }
+        private void pogressbackgroundworker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            this.progressBar1.Maximum = FileNoumber();
+          
         }
 
-        private void copybackgroundworker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void pogressbackgroundworker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            progressBar1.Visible = progressBar1.Enabled = false;
-            MessageBox.Show("Finished");
+
         }
 
-        //private void loadingPercentage_DoWork(object sender, DoWorkEventArgs e)
-        //{
-        //    List<string> clickedList = new List<string>();
-        //    List<string> fileList = new List<string>();
-        //    if (!String.IsNullOrEmpty(this.selectBox.Text) && !String.IsNullOrEmpty(this.targetBox.Text))
-        //    {
-        //        if (this.selectView.Nodes[0].Nodes.Count != 0)
-        //        {
-        //            foreach (TreeNode node in this.selectView.Nodes[0].Nodes)
-        //            {
-        //                if (node.Checked)
-        //                {
-        //                    Console.WriteLine(node.Tag);
-        //                    Console.WriteLine($"{this.selectBox.Text}\\{node.Text}");
-        //                    clickedList.Add($"{this.selectBox.Text}\\{node.Text}");
-        //                }
-        //            }
-        //        }
-        //        else
-        //        {
-        //            clickedList.Add($"{this.selectBox.Text}");
-        //        }
-        //    }
-        //    foreach (var file in clickedList)
-        //    {
-        //        var attr = File.GetAttributes(file);
-        //        if (attr.HasFlag(FileAttributes.Directory))
-        //        {
-        //            List<string> list = Directory.GetFiles(file, "*", SearchOption.AllDirectories).ToList();
-        //        }
-        //    }
-        //}
-
-        //private void loadingPercentage_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        //{
-
-        //}
-
+        private void copybackgroundworker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            checkedList.Clear();
+            loadCheckedList(this.triStateTreeView.Nodes[0]);
+            this.CopyDirectory(this.selectBox.Text, checkedList, this.targetBox.Text);
+        }
+        private void loadCheckedList(TreeNode parent)
+        {
+            if (!parent.Checked)
+            {
+                foreach (TreeNode node in parent.Nodes)
+                {
+                    if (node.StateImageIndex == -1 || node.StateImageIndex == 0)
+                    {
+                        continue;
+                    }
+                    else if (node.StateImageIndex == 2)
+                    {
+                        loadCheckedList(node);
+                    }
+                    else if (node.StateImageIndex == 1)
+                    {
+                        checkedList.Add(node);
+                    }
+                }
+            }
+            else
+            {
+                checkedList.Add(parent);
+            }
+        }
 
         private void CopyDirectory(string selectPath, List<TreeNode> sourceList, string targetPath)
         {
             ConcurrentDictionary<string, object> lockDict = new ConcurrentDictionary<string, object>();
-            Parallel.ForEach(sourceList, new ParallelOptions() { MaxDegreeOfParallelism = 5 }, (folder) =>
+            downloadedNum = 0;
+            Parallel.ForEach(sourceList, new ParallelOptions() { MaxDegreeOfParallelism = 5 }, (i) =>
             {
-                var attr = File.GetAttributes(folder.Tag.ToString());
+                var attr = File.GetAttributes(i.Tag.ToString());
                 if (attr.HasFlag(FileAttributes.Directory))
                 {
-                    Parallel.ForEach(Directory.EnumerateFiles(folder.Tag.ToString(), "*", SearchOption.AllDirectories), new ParallelOptions() { MaxDegreeOfParallelism = 20 }, (file) =>
+                    Parallel.ForEach(Directory.EnumerateFiles(i.Tag.ToString(), "*", SearchOption.AllDirectories), new ParallelOptions() { MaxDegreeOfParallelism = 20 }, (j) =>
                     {
-                        string fileName = file.Split('\\').Last();
-                        string filePathDir = file.Replace(fileName, "");
-                        string targetDir = filePathDir.Replace(selectPath, targetPath);
-
-                        var lockObj = new object();
-                        var checking = lockDict.TryAdd($"{targetDir}\\{fileName}", lockObj);
-                        if (checking)
+                        try
                         {
-                            if (!Directory.Exists(targetDir))
+                            string fileName = j.Split('\\').Last();
+                            string filePathDir = j.Replace(fileName, "");
+                            string targetDir = filePathDir.Replace(selectPath, targetPath);
+
+                            var lockObj = new object();
+                            var checking = lockDict.TryAdd($"{targetDir}\\{fileName}", lockObj);
+                            if (checking)
                             {
-                                Directory.CreateDirectory(targetDir);
+                                if (!Directory.Exists(targetDir))
+                                {
+                                    Directory.CreateDirectory(targetDir);
+                                }
+                                File.Copy(j, $"{targetDir}\\{fileName}", true);
+                                downloadedNum++;
+
                             }
-                            File.Copy(file, $"{targetDir}\\{fileName}", true);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.ToString());
                         }
                     });
                 }
                 else
                 {
                     var lockObj = new object();
-                    string fileName = folder.Tag.ToString().Split('\\').Last();
-                    string filePathDir = folder.Tag.ToString().Replace(fileName, "");
+                    string fileName = i.Tag.ToString().Split('\\').Last();
+                    string filePathDir = i.Tag.ToString().Replace(fileName, "");
                     string targetDir = filePathDir.Replace(selectPath, targetPath);
                     var checking = lockDict.TryAdd($"{targetDir}\\{fileName}", lockObj);
                     if (checking)
@@ -376,43 +404,53 @@ namespace CopyAndPaste
                         {
                             Directory.CreateDirectory(targetDir);
                         }
-                        File.Copy(folder.Tag.ToString(), $"{targetDir}\\{fileName}", true);
+                        File.Copy(i.Tag.ToString(), $"{targetDir}\\{fileName}", true);
+                        downloadedNum++;
+
                     }
                 }
             });
         }
-
-        private void selectView_AfterCheck(object sender, TreeViewEventArgs e)
+        private void copybackgroundworker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            var maxChildNodeLength = e.Node.Nodes.Count;
-            foreach (TreeNode n in e.Node.Nodes)
+            progressBar1.Visible = progressBar1.Enabled = false;
+            MessageBox.Show("Finished");
+            this.submitButton.Enabled = true;
+            this.selectButton.Enabled = true;
+            this.targetButton.Enabled = true;
+            this.submitButton.ForeColor = Color.Black;
+        }
+        private void file_Click(object sender, EventArgs e)
+        {
+            this.fileNumberText.Text = FileNoumber().ToString();
+            this.fileNumberButton.Enabled = true;
+            this.fileNumberButton.ForeColor = Color.Black;
+        }
+        private int FileNoumber()
+        {
+            checkedList.Clear();
+            this.fileNumberButton.Enabled = false;
+            this.fileNumberButton.ForeColor = Color.Gray;
+            loadCheckedList(this.triStateTreeView.Nodes[0]);
+            int total = 0;
+            foreach (var i in checkedList)
             {
-                n.Checked = e.Node.Checked;
+                var attr = File.GetAttributes(i.Tag.ToString());
+                if (attr.HasFlag(FileAttributes.Directory))
+                {
+                    var files = Directory.GetFiles(i.Tag.ToString(), "*", SearchOption.AllDirectories);
+                    foreach (var f in files)
+                    {
+                        total++;
+                    }
+                }
+                else
+                {
+                    total++;
+                }
             }
-
+            return total;
         }
-        private void selectView_AfterExpand(object sender, TreeViewEventArgs e)
-        {
-            string path = e.Node.Tag as string;
-            e.Node.Nodes.Clear();
-            LoadSubDirectories(path, e.Node);
-            LoadFiles(path, e.Node);
-        }
-        private void triStateTreeView1_BeforeExpand(object sender, TreeViewCancelEventArgs e)
-        {
-            // A node in the tree has been selected
-            TreeView tv = sender as TreeView;
-            tv.UseWaitCursor = true;
 
-            if ((e.Node.Nodes.Count == 1) && (e.Node.Nodes[0].Text == ""))
-            {
-                string path = e.Node.Tag as string;
-                e.Node.Nodes.Clear();
-                LoadSubDirectories(path, e.Node);
-                LoadFiles(path, e.Node);
-            }
-
-            tv.UseWaitCursor = false;
-        }
     }
 }

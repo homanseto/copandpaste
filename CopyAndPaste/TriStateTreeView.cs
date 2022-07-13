@@ -52,9 +52,6 @@ namespace CopyAndPaste
 			// populate the image list, using images from the System.Windows.Forms.CheckBoxRenderer class
 			for (int i = 0; i < 3; i++)
 			{
-				// Create a bitmap which holds the relevent check box style
-				// see http://msdn.microsoft.com/en-us/library/ms404307.aspx and http://msdn.microsoft.com/en-us/library/system.windows.forms.checkboxrenderer.aspx
-
 				System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(16, 16);
 				System.Drawing.Graphics chkGraphics = System.Drawing.Graphics.FromImage(bmp);
 				switch (i)
